@@ -2,15 +2,15 @@
 
 #pragma once
 
-
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
 // Forward declarations
 class ATank;
+class UTankAimingComponent;
 
 /**
- * 
+ * Responsible for helping the player aim
  */
 UCLASS()
 class BATTLETANKS_API ATankPlayerController : public APlayerController
@@ -20,6 +20,10 @@ class BATTLETANKS_API ATankPlayerController : public APlayerController
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank* GetControlledTank() const;
+
+	// Macro allows for no implementation
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UTankAimingComponent* AimingComponentRef);
 
 private:
 	virtual void BeginPlay() override;

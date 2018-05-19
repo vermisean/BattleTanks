@@ -1,6 +1,7 @@
 // Copyright 2018 Sean Duffy
 
 #include "TankPlayerController.h"
+#include "TankAimingComponent.h"
 #include "BattleTanks.h"
 #include "Tank.h"
 
@@ -8,7 +9,16 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto ControlledTank = GetControlledTank();
+	// Event delegate
+	auto AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (AimingComponent)
+	{
+		FoundAimingComponent(AimingComponent);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No aiming component found by PlayerController at BeginPlay!"));
+	}
 }
 
 void ATankPlayerController::Tick(float DeltaTime)

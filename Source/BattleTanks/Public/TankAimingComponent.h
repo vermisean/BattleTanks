@@ -34,9 +34,9 @@ public:
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 		
 protected:
-	// Default firing state is reloading
+	// Default firing state
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Reloading;
+	EFiringState FiringState = EFiringState::Aiming;
 
 private:
 	UTankBarrel* Barrel = nullptr;
