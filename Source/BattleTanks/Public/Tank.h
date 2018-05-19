@@ -19,6 +19,8 @@ class BATTLETANKS_API ATank : public APawn
 	GENERATED_BODY()
 
 public:
+	virtual void BeginPlay() override;
+
 	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
