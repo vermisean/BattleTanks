@@ -7,10 +7,6 @@
 #include "TankAIController.generated.h"
 // Depends on movement via pathfinding
 
-
-// Forward Declaration
-class ATank;
-
 /**
  * 
  */
