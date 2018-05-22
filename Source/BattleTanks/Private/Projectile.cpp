@@ -1,7 +1,7 @@
 // Copyright 2018 Sean Duffy
 
 #include "Projectile.h"
-
+#include "BattleTanks.h"
 
 
 // Sets default values
