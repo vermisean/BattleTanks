@@ -5,9 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "TankAIController.generated.h"
-
-// Forward Declaration
-class ATank;
+// Depends on movement via pathfinding
 
 /**
  * 
