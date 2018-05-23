@@ -24,7 +24,9 @@ public:
 	// Called to drive tank
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void SetThrottle(float Throttle);
-	
+
+	void DriveTrack();
+
 	// Max force per track in Newtons
 	UPROPERTY(EditDefaultsOnly)
 	float MaxDrivingForce = 400000.0f;		// Assume 40 tonne tank with 1g acceleration
@@ -32,4 +34,6 @@ public:
 private:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	float CurrentThrottle = 0.0f;
 };

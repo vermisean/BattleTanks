@@ -30,26 +30,30 @@ void UTankTrack::ApplySideWaysForce()
 	TankRoot->AddForce(ForceCorrection);
 }
 
-// Set throttle between -1 and 1
+// Set throttle between -2 and 2
 void UTankTrack::SetThrottle(float Throttle)
 {
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -2, +2);
+
+}
+
+void UTankTrack::DriveTrack()
+{
 	// Apply appropriate force through throttle
-	auto ForceApplied = GetForwardVector() * Throttle * MaxDrivingForce;
+	auto ForceApplied = GetForwardVector() * CurrentThrottle * MaxDrivingForce;
 	// Gets location of track
-	auto ForceLocation = GetComponentLocation();	
+	auto ForceLocation = GetComponentLocation();
 	// Get root component (UStaticMeshComponent is a USceneComponent, cast to UPrimitive so that we can apply forces)
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
 }
 
-
-
 void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("GOT HIT!"));
-
 	// Drive tracks
-
+	DriveTrack();
 	// Apply sideways force
 	ApplySideWaysForce();
+	// Reset throttle
+	CurrentThrottle = 0.0f;
 }
