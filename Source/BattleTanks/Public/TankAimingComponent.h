@@ -13,7 +13,8 @@ enum class EFiringState : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 // Forward Declarations
@@ -29,6 +30,8 @@ class BATTLETANKS_API UTankAimingComponent : public UActorComponent
 public:	
 	UTankAimingComponent();
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 	
@@ -37,14 +40,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
 
+	EFiringState GetFiringState() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	int32 GetRoundsLeft() const;
 
 protected:
 	// Default firing state
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Aiming;
+	EFiringState FiringState = EFiringState::Reloading;
 
 private:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 	void MoveBarrelTowards(FVector AimDirection);
+
+	bool IsBarrelMoving();
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
@@ -57,6 +68,12 @@ private:
 
 	float LastFireTime = 0.0f;
 
+	FVector AimDirection;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> ProjectileBlueprint;		// Alternatively, UClass* ProjectileBlueprint; -> prone to crashes
+
+	// Ammo left
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 RoundsLeft = 5;
 };

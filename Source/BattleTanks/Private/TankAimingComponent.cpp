@@ -8,7 +8,14 @@
 
 UTankAimingComponent::UTankAimingComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+
+void UTankAimingComponent::BeginPlay()
+{
+	// Ensures first fire is after initial reload
+	LastFireTime = GetWorld()->GetTimeSeconds();
 }
 
 
@@ -43,10 +50,30 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	// Calculate the out launch velocity
 	if (bHaveAimSolution)
 	{
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 	}
 
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	if (RoundsLeft <= 0)
+	{
+		FiringState = EFiringState::OutOfAmmo;
+	}
+	else if ((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTimeInSeconds)
+	{
+		FiringState = EFiringState::Reloading;
+	}
+	else if (IsBarrelMoving())
+	{
+		FiringState = EFiringState::Aiming;
+	}
+	else
+	{
+		FiringState = EFiringState::Locked;
+	}
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
@@ -59,17 +86,37 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
 	Barrel->Elevate(DeltaRotator.Pitch);
-	Turret->Rotate(DeltaRotator.Yaw);
+
+	// Always yaw shortest way
+	if (FMath::Abs(DeltaRotator.Yaw) < 180)
+	{
+		Turret->Rotate(DeltaRotator.Yaw);
+	}
+	else
+	{
+		Turret->Rotate(-DeltaRotator.Yaw);
+	}
+
+}
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(Barrel)) { return false; }
+	
+	auto BarrelForward = Barrel->GetForwardVector();
+	return !BarrelForward.Equals(AimDirection, 0.01f);
+	
 }
 
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(Barrel)) { return; }
+	// Locked for AI, whenever for us
+	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming)
+	{ 	
+		if (!ensure(Barrel)) { return; }
+		if (!ensure(ProjectileBlueprint)) { return; }
 
-	bool isReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTimeInSeconds;
-
-	if (isReloaded)
-	{ 	// Spawn projectile at socket location on barrel
+		// Spawn projectile at socket location on barrel
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
 			ProjectileBlueprint,
 			Barrel->GetSocketLocation(FName("Projectile")),
@@ -78,5 +125,16 @@ void UTankAimingComponent::Fire()
 		Projectile->LaunchProjectile(LaunchSpeed);
 
 		LastFireTime = GetWorld()->GetTimeSeconds();
+		RoundsLeft--;
 	}
+}
+
+EFiringState UTankAimingComponent::GetFiringState() const
+{
+	return FiringState;
+}
+
+int32 UTankAimingComponent::GetRoundsLeft() const
+{
+	return RoundsLeft;
 }
