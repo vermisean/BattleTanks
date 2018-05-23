@@ -6,7 +6,7 @@
 
 AProjectile::AProjectile()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
 	SetRootComponent(CollisionMesh);
@@ -14,7 +14,11 @@ AProjectile::AProjectile()
 	CollisionMesh->SetVisibility(false);
 
 	LaunchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
-	LaunchBlast->SetupAttachment(RootComponent);
+	LaunchBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
+	ImpactBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	ImpactBlast->bAutoActivate = false;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	ProjectileMovement->bAutoActivate = false;
