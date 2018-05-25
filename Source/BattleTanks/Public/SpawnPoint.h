@@ -12,20 +12,20 @@ class BATTLETANKS_API USpawnPoint : public USceneComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	USpawnPoint();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	AActor* GetSpawnedActor() const { return SpawnedActor; }	// inline method
+	AActor* GetSpawnedActor() const { return SpawnedActor; }
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	// Config
-	UPROPERTY(EditDefaultsOnly, Category = "Config")
-	TSubclassOf<AActor> SpawnClass;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TSubclassOf<AActor> SpawnClass;
+
 	UPROPERTY()
-	AActor* SpawnedActor;
+		AActor* SpawnedActor;
 };
