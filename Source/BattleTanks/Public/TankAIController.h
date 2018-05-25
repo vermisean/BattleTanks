@@ -8,7 +8,7 @@
 // Depends on movement via pathfinding
 
 /**
- * 
+ * Handles death of tank AI
  */
 UCLASS()
 class BATTLETANKS_API ATankAIController : public AAIController
@@ -23,4 +23,9 @@ protected:
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaTime ) override;
+	virtual void SetPawn(APawn* InPawn) override;
+
+	// Delegate
+	UFUNCTION()
+	void OnPossessedTankDeath();
 };
