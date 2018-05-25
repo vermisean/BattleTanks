@@ -14,7 +14,7 @@ UTankTrack::UTankTrack()
 // Set throttle between -2 and 2
 void UTankTrack::SetThrottle(float Throttle)
 {
-	float CurrentThrottle = FMath::Clamp<float>(Throttle, -1, +1);
+	float CurrentThrottle = FMath::Clamp<float>(Throttle, -2, +2);
 	DriveTrack(CurrentThrottle);
 }
 
