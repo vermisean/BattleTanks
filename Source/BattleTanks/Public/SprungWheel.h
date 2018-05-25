@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "SprungWheel.generated.h"
 
 UCLASS()
@@ -14,20 +15,33 @@ class BATTLETANKS_API ASprungWheel : public AActor
 	
 public:	
 	ASprungWheel();
+	virtual void Tick(float DeltaTime) override;
+	// Allows for driving forward
+	void AddDrivingForce(float ForceMagnitude);
 
 protected:
 	virtual void BeginPlay() override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
-
 private:
+	void SetUpConstraint();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void ApplyForce();
+
+	// Components
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* Mass = nullptr;
-	
+	USphereComponent* Wheel = nullptr;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* Wheel = nullptr;
+	USphereComponent* Axle = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPhysicsConstraintComponent* MassWheelConstraint = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPhysicsConstraintComponent* AxleWheelConstraint = nullptr;
+
+	float TotalForceMagnitudeThisFrame = 0;
 };

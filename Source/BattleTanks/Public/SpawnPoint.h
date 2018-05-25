@@ -13,17 +13,19 @@ class BATTLETANKS_API USpawnPoint : public USceneComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	USpawnPoint();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	AActor* GetSpawnedActor() const { return SpawnedActor; }	// inline method
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	// Config
+	UPROPERTY(EditDefaultsOnly, Category = "Config")
+	TSubclassOf<AActor> SpawnClass;
 	
+	UPROPERTY()
+	AActor* SpawnedActor;
 };
