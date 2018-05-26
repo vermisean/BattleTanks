@@ -82,9 +82,9 @@ void UTankAimingComponent::MoveBarrelTowards(FVector TargetAimDirection)
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 
 	// Figure out difference between current barrel rotation and aim direction
-	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	auto AimAsRotator = TargetAimDirection.Rotation();
-	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
+	FRotator AimAsRotator = TargetAimDirection.Rotation();
+	FRotator DeltaRotator = AimAsRotator - BarrelRotator;
 
 	Barrel->Elevate(DeltaRotator.Pitch);
 
@@ -104,7 +104,7 @@ bool UTankAimingComponent::IsBarrelMoving()
 {
 	if (!ensure(Barrel)) { return false; }
 	
-	auto BarrelForward = Barrel->GetForwardVector();
+	FVector BarrelForward = Barrel->GetForwardVector();
 	return !BarrelForward.Equals(AimDirection, 0.01f);
 	
 }
@@ -118,7 +118,7 @@ void UTankAimingComponent::Fire()
 		if (!ensure(ProjectileBlueprint)) { return; }
 
 		// Spawn projectile at socket location on barrel
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(
 			ProjectileBlueprint,
 			Barrel->GetSocketLocation(FName("Projectile")),
 			Barrel->GetSocketRotation(FName("Projectile"))

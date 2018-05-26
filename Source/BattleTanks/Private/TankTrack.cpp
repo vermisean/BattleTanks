@@ -21,10 +21,10 @@ void UTankTrack::SetThrottle(float Throttle)
 void UTankTrack::DriveTrack(float CurrentThrottle)
 {
 	// Apply appropriate force through throttle
-	auto ForceApplied = CurrentThrottle * MaxDrivingForce;
+	float ForceApplied = CurrentThrottle * MaxDrivingForce;
 	// Get wheels and get force per wheel
-	auto Wheels = GetWheels();
-	auto ForcePerWheel = ForceApplied / Wheels.Num();
+	TArray<ASprungWheel*> Wheels = GetWheels();
+	float ForcePerWheel = ForceApplied / Wheels.Num();
 	// Run through each wheel, apply correct force
 	for (ASprungWheel* Wheel : Wheels)
 	{
@@ -42,11 +42,11 @@ TArray<class ASprungWheel*> UTankTrack::GetWheels() const
 
 	for (USceneComponent* Child : Children)
 	{
-		auto SpawnPointChild = Cast<USpawnPoint>(Child);
+		USpawnPoint* SpawnPointChild = Cast<USpawnPoint>(Child);
 		if (!SpawnPointChild) { continue; }
 
 		AActor* SpawnedChild = SpawnPointChild->GetSpawnedActor();
-		auto SprungWheel = Cast<ASprungWheel>(SpawnedChild);
+		ASprungWheel* SprungWheel = Cast<ASprungWheel>(SpawnedChild);
 		if (!SprungWheel) { continue; }
 
 		ResultArray.Add(SprungWheel);
