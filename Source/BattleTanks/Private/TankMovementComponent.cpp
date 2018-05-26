@@ -31,15 +31,15 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 	// No Super as we are replacing the base functionality - We are intercepting this method for the velocity only
 	
 	// Gets the AI's forward move velocity normal
-	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
+	FVector AIForwardIntention = MoveVelocity.GetSafeNormal();
 	// Get AI's forward vector normal
-	auto TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	FVector TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
 	// Get dot product
-	auto ForwardThrow = FVector::DotProduct(AIForwardIntention, TankForward);
+	float ForwardThrow = FVector::DotProduct(AIForwardIntention, TankForward);
 	// Move forward or backward based on dot product
 	this->IntendMoveForward(ForwardThrow);
 	// Get cross product
-	auto RightThrow = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+	float RightThrow = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
 	// Move right or left based on cross product
 	this->IntendTurnRight(RightThrow);
 }

@@ -15,8 +15,8 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
-	auto ControlledTank = GetPawn();
+	APawn* PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	APawn* ControlledTank = GetPawn();
 
 	// Ensure there is a player available
 	if (!(PlayerTank && ControlledTank)) { return; }
@@ -25,7 +25,7 @@ void ATankAIController::Tick(float DeltaTime)
 	MoveToActor(PlayerTank, AcceptanceRadius);
 
 	// Aim towards player
-	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+	UTankAimingComponent* AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 	AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
 	if(AimingComponent->GetFiringState() == EFiringState::Locked)
@@ -42,7 +42,7 @@ void ATankAIController::SetPawn(APawn* InPawn)
 
 	if (InPawn)
 	{
-		auto PossessedTank = Cast<ATank>(InPawn);
+		ATank* PossessedTank = Cast<ATank>(InPawn);
 		if (!PossessedTank) { return; }
 
 		// Subscribe our local method to tank's death event
