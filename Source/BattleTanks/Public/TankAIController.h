@@ -8,7 +8,7 @@
 // Depends on movement via pathfinding
 
 /**
- * Handles death of tank AI
+ * Handles tank AI
  */
 UCLASS()
 class BATTLETANKS_API ATankAIController : public AAIController
@@ -16,6 +16,9 @@ class BATTLETANKS_API ATankAIController : public AAIController
 	GENERATED_BODY()
 
 protected:
+// 	UPROPERTY(EditDefaultsOnly, Category = "Game Setup")
+// 	int32 EnemiesLeft = 0;
+
 	// How close the AI tank can get to the player
 	UPROPERTY(EditDefaultsOnly, Category = "AI Setup")
 	float AcceptanceRadius = 80000.0f;
