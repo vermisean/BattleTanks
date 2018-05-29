@@ -7,6 +7,11 @@
 ATank::ATank()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+// 	DeathSmoke = CreateDefaultSubobject<UParticleSystemComponent>(FName("DeathSmoke"));
+// 	//DeathSmoke->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+// 	DeathSmoke->bAutoActivate = false;
+// 	DeathSmoke->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATank::BeginPlay()
@@ -24,6 +29,7 @@ float ATank::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AC
 
 	if (CurrentHealth <= 0)
 	{
+		DeathSmoke->Activate();
 		OnDeath.Broadcast();
 	}
 
